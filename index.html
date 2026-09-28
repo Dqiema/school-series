@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Базовая политика безопасности CSP против XSS и вредоносных инъекций -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://fonts.cdnfonts.com https://via.placeholder.com; img-src 'self' data: https:; font-src 'self' https://fonts.cdnfonts.com;">
+    
+    <title>МКОУ СОШ №2 с. Князе-Волконское-1</title>
+    
+    <link rel="preconnect" href="https://fonts.cdnfonts.com">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #f5f5f7;
+            --text-dark: #1d1d1f;
+            --text-muted: #86868b;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --shadow-apple: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 14px 40px rgba(0, 0, 0, 0.12);
+            --accent-blue: #0071e3;
+        }
+
+        /* ЗАПРЕТ ВЫДЕЛЕНИЯ ТЕКСТА НА ВСЕМ САЙТЕ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* РАЗРЕШЕНИЕ ВЫДЕЛЕНИЯ ТОЛЬКО ДЛЯ СЕКЦИИ КОНТАКТОВ */
+        .selectable-contacts, .selectable-contacts * {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Быстрый курсор только для десктопов */
+        @media (pointer: fine) {
+            * { cursor: none !important; }
+            .custom-cursor {
+                width: 16px;
+                height: 16px;
+                background-color: #1d1d1f;
+                border-radius: 50%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+                z-index: 99999;
+                transition: transform 0.15s ease, background-color 0.15s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                will-change: transform;
+            }
+            .custom-cursor.hover {
+                transform: scale(2);
+                background-color: rgba(29, 29, 31, 0.85);
+            }
+        }
+
+        @media (pointer: coarse) {
+            .custom-cursor { display: none !important; }
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(245, 245, 247, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header__logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .header__logo h1 {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.2px;
+            color: var(--text-dark);
+        }
+
+        .header__logo span {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+            display: block;
+        }
+
+        .nav__list {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav__list a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.8;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .nav__list a:hover {
+            opacity: 1;
+            color: var(--accent-blue);
+        }
+
+        section {
+            padding: 80px 20px 40px;
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-align: center;
+            margin-bottom: 32px;
+            color: var(--text-dark);
+        }
+
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .hero h2 {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+            max-width: 850px;
+        }
+
+        .hero__img-container {
+            width: 100%;
+            max-width: 860px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-apple);
+            border: 1px solid var(--glass-border);
+            background: #fff;
+        }
+
+        .hero__img {
+            width: 100%;
+            height: auto;
+            max-height: 420px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: var(--shadow-apple);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            will-change: transform;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .about__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .about__stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-card strong {
+            font-size: 38px;
+            font-weight: 700;
+            display: block;
+            color: var(--accent-blue);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-card span {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .director-block {
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .director-block h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .director-sub {
+            color: var(--accent-blue);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .director-quote {
+            color: #424245;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .teachers-banner {
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 36px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-apple);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-apple {
+            background: var(--text-dark);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-apple:hover {
+            transform: scale(1.03);
+            background: #000;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .news-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .news-card .date {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .teachers-page-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(245, 245, 247, 0.98);
+            z-index: 2000;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            padding: 40px 20px;
+        }
+
+        .teachers-page-view.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .teachers-container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        .back-nav-btn {
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-apple);
+            transition: transform 0.2s ease;
+            margin-bottom: 24px;
+        }
+
+        .back-nav-btn:hover {
+            transform: translateX(-4px);
+        }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 32px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .teachers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+        }
+
+        .teacher-card {
+            background: #ffffff;
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: var(--shadow-apple);
+            transition: transform 0.2s ease;
+            will-change: transform;
+        }
+
+        .teacher-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .teacher-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #e5e5ea;
+        }
+
+        .teacher-name {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .teacher-role {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .footer {
+            border-top: 1px solid rgba(0,0,0,0.08);
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            section { padding: 60px 16px 20px; }
+            .hero { padding-top: 80px; min-height: auto; }
+            .hero h2 { font-size: 28px; }
+            .about__grid { grid-template-columns: 1fr; }
+            .nav__list { display: none; }
+            .section-title { font-size: 26px; }
+            .teachers-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .teacher-img { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="custom-cursor" id="cursor"></div>
+
+    <header class="header">
+        <div class="header__logo">
+            <img src="photoschool.jpg" alt="Логотип школы" loading="lazy" onerror="this.src='https://via.placeholder.com/38'">
+            <h1>МКОУ СОШ №2<br><span>с. Князе-Волконское-1</span></h1>
+        </div>
+        <nav>
+            <ul class="nav__list">
+                <li><a href="#main">Главная</a></li>
+                <li><a href="#about">О школе</a></li>
+                <li><a href="#director">Директор</a></li>
+                <li><a href="#" id="openTeachersBtn" style="color: var(--accent-blue); font-weight: 600;">Педагоги ↗</a></li>
+                <li><a href="#sections">Кружки</a></li>
+                <li><a href="#contacts">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="main">
+        <h2>МКОУ СОШ №2 с. Князе-Волконское-1</h2>
+        <div class="hero__img-container">
+            <img src="photoschool.jpg" alt="Здание школы" class="hero__img" loading="eager" onerror="this.src='https://via.placeholder.com/860x440/e5e5ea/1d1d1f?text=МКОУ+СОШ+%E2%84%962'">
+        </div>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">О школе</h2>
+        <div class="about__grid">
+            <div class="glass-card">
+                <p style="margin-bottom: 12px; color: #3a3a3c; font-size: 15px;">Наша школа расположена в современно оборудованном 3-этажном здании. Здесь создана комфортная атмосфера для развития каждого ученика с 1 по 11 класс.</p>
+                <p style="color: #3a3a3c; font-size: 15px;">В распоряжении учеников: спортивный зал, библиотека, актовый зал, столовая на 110 мест и уличный спортивный комплекс.</p>
+            </div>
+            <div class="about__stats">
+                <div class="glass-card stat-card"><strong>29</strong><span>Золотых медалистов</span></div>
+                <div class="glass-card stat-card"><strong>58.0</strong><span>Средний балл ЕГЭ</span></div>
+                <div class="glass-card stat-card"><strong>66%</strong><span>Поступление в ВУЗы</span></div>
+                <div class="glass-card stat-card"><strong>79</strong><span>Серебряных медалистов</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="director">
+        <h2 class="section-title">Слово директора</h2>
+        <div class="glass-card director-block">
+            <h3>Ковалева Наталья Александровна</h3>
+            <div class="director-sub">Директор школы | Тел: +7 (4212) 49-82-96</div>
+            <p class="director-quote">«Приветствую вас на официальном сайте школы! Для нас школа — это не просто учебные классы, а вдохновляющее сообщество, где каждый ребенок открывает свои таланты и уверенно шагает в будущее.»</p>
+            <p style="color: var(--text-muted); font-size: 13px;">С уважением, администрация МКОУ СОШ №2</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="teachers-banner">
+            <h3 style="font-size: 24px; font-weight: 700;">Педагогический коллектив</h3>
+            <p style="color: var(--text-muted); max-width: 520px; font-size: 14px;">Познакомьтесь с нашей командой учителей, классных руководителей и администрацией школы.</p>
+            <button class="btn-apple" id="openTeachersBannerBtn">
+                <span>Открыть список педагогов</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </section>
+
+    <section id="news">
+        <h2 class="section-title">Новости и события</h2>
+        <div class="grid-3">
+            <div class="glass-card news-card">
+                <div class="date">03 Апреля</div>
+                <h3>Конкурс «КЛАССНОЕ призвание»</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Участие педагогов в краевом профессиональном конкурсе.</p>
+            </div>
+            <div class="glass-card news-card">
+                <div class="date">18 Апреля</div>
+                <h3>«Вальс Победы»</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Традиционная патриотическая акция в актовом зале.</p>
+            </div>
+            <div class="glass-card news-card">
+                <div class="date">01–05 Июня</div>
+                <h3>Учебные военные сборы</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Практические сборы для старшеклассников.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="sections">
+        <h2 class="section-title">Секции и кружки</h2>
+        <div class="grid-3">
+            <div class="glass-card">
+                <h3 style="font-size: 18px; margin-bottom: 4px;">Волейбол</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">5–11 классы | Бесплатно</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="font-size: 18px; margin-bottom: 4px;">Шахматный клуб</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">5–8 классы | Бесплатно</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="font-size: 18px; margin-bottom: 4px;">ВПО «Ирбис»</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">5–11 классы | Бесплатно</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ТОЛЬКО ЭТОТ БЛОК МОЖНО ВЫДЕЛЯТЬ И КОПИРОВАТЬ -->
+    <section id="contacts">
+        <h2 class="section-title">Контакты</h2>
+        <div class="glass-card selectable-contacts" style="max-width: 500px; margin: 0 auto; text-align: center;">
+            <p style="margin-bottom: 8px;"><strong>Адрес:</strong> Хабаровский край, с. Князе-Волконское-1, ДОС</p>
+            <p style="margin-bottom: 8px;"><strong>Телефон:</strong> +7 (4212) 49-82-96</p>
+            <p style="margin-bottom: 8px;"><strong>Email:</strong> mkousosh2kv1@mail.ru</p>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 12px;"><strong>Время работы:</strong> Пн – Сб с 9:00 до 16:00</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 МКОУ СОШ №2 с. Князе-Волконское-1</p>
+    </footer>
+
+    <!-- СТРАНИЦА ПЕДАГОГОВ -->
+    <div class="teachers-page-view" id="teachersView">
+        <div class="teachers-container">
+            <button class="back-nav-btn" id="closeTeachersBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span>На главную</span>
+            </button>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="font-size: 36px; font-weight: 700; letter-spacing: -1px;">Педагогический состав</h1>
+                <p style="color: var(--text-muted); font-size: 15px; margin-top: 4px;">Учителя и руководство МКОУ СОШ №2 с. Князе-Волконское-1</p>
+            </div>
+
+            <div class="category-title">Руководство школы</div>
+            <div class="teachers-grid">
+                <div class="teacher-card">
+                    <img src="1.jpeg" alt="Ковалева Н.А." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Ковалева+Н.А.'">
+                    <div class="teacher-name">Ковалева<br>Наталья Александровна</div>
+                    <div class="teacher-role">Директор школы</div>
+                </div>
+                <div class="teacher-card">
+                    <img src="2.jpeg" alt="Зырянова Т.С." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Зырянова+Т.С.'">
+                    <div class="teacher-name">Зырянова<br>Татьяна Сергеевна</div>
+                    <div class="teacher-role">Заместитель директора</div>
+                </div>
+                <div class="teacher-card">
+                    <img src="24.jpeg" alt="Гриценко Е.А." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Гриценко+Е.А.'">
+                    <div class="teacher-name">Гриценко<br>Елена Анатольевна</div>
+                    <div class="teacher-role">Заместитель директора</div>
+                </div>
+            </div>
+
+            <div class="category-title">Учителя и специалисты</div>
+            <div class="teachers-grid">
+                <div class="teacher-card">
+                    <img src="3.jpeg" alt="Боровикова Л.М." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Боровикова+Л.М.'">
+                    <div class="teacher-name">Боровикова<br>Людмила Михайловна</div>
+                    <div class="teacher-role">Педагог-библиотекарь</div>
+                </div>
+                <div class="teacher-card">
+                    <img src="4.jpeg" alt="Бунеева О.Н." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Бунеева+О.Н.'">
+                    <div class="teacher-name">Бунеева<br>Оксана Николаевна</div>
+                    <div class="teacher-role">Учитель начальных классов</div>
+                </div>
+                <div class="teacher-card">
+                    <img src="5.jpeg" alt="Брагин Г.Е." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Брагин+Г.Е.'">
+                    <div class="teacher-name">Брагин<br>Григорий Евгеньевич</div>
+                    <div class="teacher-role">Советник по воспитанию</div>
+                </div>
+                <div class="teacher-card">
+                    <img src="7.jpeg" alt="Долотина Д.Г." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Долотина+Д.Г.'">
+                    <div class="teacher-name">Долотина<br>Динара Гаясовна</div>
+                    <div class="teacher-role">Учитель</div>
+                </div>
+                <div class="teacher-card">
+                    <img src="20.jpeg" alt="Путинцева О.В." class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Путинцева+О.В.'">
+                    <div class="teacher-name">Путинцева<br>Ольга Викторовна</div>
+                    <div class="teacher-role">Учитель</div>
+                </div>
+                <div class="teacher-card">
+                    <img src="25.jpeg" alt="Педагог" class="teacher-img" loading="lazy" onerror="this.src='https://via.placeholder.com/230x260/e5e5ea/1d1d1f?text=Педагог'">
+                    <div class="teacher-name">Учительский<br>состав</div>
+                    <div class="teacher-role">Преподаватель</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // МГНОВЕННЫЙ КУРСОР (без задержки)
+        const cursor = document.getElementById('cursor');
+
+        if (window.matchMedia('(pointer: fine)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                // Прямая позиция без сглаживания — работает максимально быстро
+                cursor.style.transform = `translate3d(${e.clientX - 8}px, ${e.clientY - 8}px, 0)`;
+            });
+
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest('a, button, .glass-card, .teacher-card')) {
+                    cursor.classList.add('hover');
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest('a, button, .glass-card, .teacher-card')) {
+                    cursor.classList.remove('hover');
+                }
+            });
+        }
+
+        // ЗАЩИТА ОТ КЛИК-ФЛУДА И КЛИК-БОТОВ (Client Rate Limiting)
+        let lastClickTime = 0;
+        document.addEventListener('click', (e) => {
+            const now = Date.now();
+            if (now - lastClickTime < 200) { // Игнорировать клики чаще 200мс
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            lastClickTime = now;
+        }, true);
+
+        // Управление окном педагогов
+        const teachersView = document.getElementById('teachersView');
+
+        function openTeachers(e) {
+            if (e) e.preventDefault();
+            teachersView.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTeachers() {
+            teachersView.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('openTeachersBtn').addEventListener('click', openTeachers);
+        document.getElementById('openTeachersBannerBtn').addEventListener('click', openTeachers);
+        document.getElementById('closeTeachersBtn').addEventListener('click', closeTeachers);
+    </script>
+</body>
+</html>
